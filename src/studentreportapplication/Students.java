@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 import java.sql.*;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 public class Students
 {
 
@@ -24,7 +25,7 @@ public class Students
     JTextField setStudentLocation;
     JTextField setStudentContactInformation;
     
-//    firstDisplay firstDisplay = new firstDisplay();
+
 
 //----------------------Start of Getters and Setters--------------------------//
     
@@ -146,7 +147,7 @@ public class Students
                 JOptionPane.showMessageDialog(null, "Row has been inserted");
             }
 
-//          connection.close();
+
         } catch (Exception e)
         {
             System.err.print(e);
@@ -165,7 +166,7 @@ public void addingInformationToTable()
     {
        con = DatabaseConnection.getConnection();
        
-//       PreparedStatement statement = con.prepareStatement(populateTable);
+
        Statement st =  con.createStatement();
        ResultSet rs =st.executeQuery(populateTable);
        
@@ -182,8 +183,8 @@ public void addingInformationToTable()
            
            JTable table = new JTable();
            
-         DefaultTableModel  model = new DefaultTableModel();
-//         model.setColumnIdentifiers();
+           DefaultTableModel  model = new DefaultTableModel();
+
           table.setModel(model);
           
           model.addRow(tbData);
@@ -195,4 +196,43 @@ public void addingInformationToTable()
     }
 }    
 //-----------------------------End of Method----------------------------------//
+
+public TableModel popultingGrid() throws SQLException
+{
+    String populateTable = "select * from StudentInformation";
+    Connection con = null;
+    
+        con = DatabaseConnection.getConnection();
+        
+        Statement st =  con.createStatement();
+        
+        ResultSet rs =st.executeQuery(populateTable);
+        
+        int numCols = rs.getMetaData().getColumnCount();
+        
+        DefaultTableModel tblModel = new DefaultTableModel();
+        
+        for (int col = 1; col <= numCols; col++){
+            tblModel.addColumn(rs.getMetaData().getColumnLabel(col));
+        }
+
+        int row = 0;
+        while (rs != null && rs.next())
+        {
+            tblModel.addRow(new Object[0]);
+            tblModel.setValueAt(rs.getString("LastName"), row, 2);
+            tblModel.setValueAt(rs.getString("FirstName"), row, 3);
+            tblModel.setValueAt(rs.getString("StudentsClass"), row, 4);
+            tblModel.setValueAt(rs.getString("StudentsGrade"), row, 5);
+            tblModel.setValueAt(rs.getString("StudentsLocation"), row, 6);
+            tblModel.setValueAt(rs.getString("StudentsAge"), row, 7);
+            tblModel.setValueAt(rs.getString("ContactInformation"), row, 8);
+            row++;
+        }   
+         return tblModel;
+    }
+
+   //Must be able to click on row and appears in textfields!!!!!!!!!
+   //Hide id
+   //Updates based  on student id because it is unique
 }

@@ -20,19 +20,19 @@ import javax.swing.table.DefaultTableModel;
 //Class for if the user wants to add a new student into the system
 public class firstDisplay extends JFrame implements ActionListener
 {
-
+   //Try not to make to many global variables NB!!!!!!!!!!!!!!!!!
     private JTextField studentFirstName, studentLastName, studentClass, studentGrade, studentAge,
             studentLocation, studentContactInformation;
     private JLabel textStudentFirstName, textStudentLastName, textStudentClass, textStudentGrade,
             textStudentAge, textStudentLocation, textStudentContactInformation;
 
     private JButton returnToMenu, saveDetails;
-//   private JTable table;
+    private JTable table;
     private DefaultTableModel model;
 //   private Object[][] studentsData;
     Students students = new Students();
 
-    firstDisplay()
+    firstDisplay() throws SQLException
     {
 
 //-------------------Start of JButtons----------------------------------------//
@@ -144,14 +144,16 @@ public class firstDisplay extends JFrame implements ActionListener
             "Students Grade", "Student Age", "Studet Location", "Contact Information"
         };
 
-        JTable table = new JTable();
+         table = new JTable();
 
         model = new DefaultTableModel();
         model.setColumnIdentifiers(columnNames);
+        
 
         table.setBounds(400, 300, 400, 300);
+        
 
-        table.setModel(model);
+        table.setModel(students.popultingGrid());
         table.setBackground(Color.WHITE);
         table.setRowHeight(30);
 
@@ -230,6 +232,7 @@ public class firstDisplay extends JFrame implements ActionListener
             row[5] = studentLocation.getText();
             row[6] = studentContactInformation.getText();
             model.addRow(row);
+//            table.setModel();
 //            students.addingInformationToTable();
             students.addStudent();
 //            Connection con = null;
