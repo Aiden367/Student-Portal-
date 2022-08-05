@@ -1,5 +1,6 @@
 package studentreportapplication;
 
+import java.awt.Component;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,10 +14,14 @@ public class Students
 {
 
     DatabaseConnection dataBaseConnection = new DatabaseConnection();
+    
+    
+    
     private String lastName, firstName, studentClass, studentLocation;
     private int studentGrade, studentAge, studentContactInformation;
     private Object [][] studentData;
-    
+    private JTable myTable,table;
+     DefaultTableModel tblModel;
     JTextField setLastName;
     JTextField setFirstName;
     JTextField setStudentAge;
@@ -29,6 +34,15 @@ public class Students
 
 //----------------------Start of Getters and Setters--------------------------//
     
+    public void setTable(JTable value)
+    {
+        this.myTable = value;
+    }
+    
+    public JTable getMyTable()
+    {
+        return myTable;
+    }
     
     public void setStudentData(Object [][] learnerData)
     {
@@ -181,7 +195,7 @@ public void addingInformationToTable()
            
            String tbData[] = {userFirstName,userLastName,userClass,userGrade,userAge,userContactInformation};
            
-           JTable table = new JTable();
+           table = new JTable();
            
            DefaultTableModel  model = new DefaultTableModel();
 
@@ -210,7 +224,10 @@ public TableModel popultingGrid() throws SQLException
         
         int numCols = rs.getMetaData().getColumnCount();
         
-        DefaultTableModel tblModel = new DefaultTableModel();
+         tblModel = new DefaultTableModel();
+         
+//         table = new JTable(tblModel);
+         
         
         for (int col = 1; col <= numCols; col++){
             tblModel.addColumn(rs.getMetaData().getColumnLabel(col));
@@ -230,6 +247,37 @@ public TableModel popultingGrid() throws SQLException
             row++;
         }   
          return tblModel;
+    }
+
+   
+    public void removeRowFromDataBase() throws SQLException
+    {
+        Connection conn =  DatabaseConnection.getConnection();
+
+        int a = JOptionPane.showConfirmDialog((Component)null,"Do you want to delete the selected "
+                + "row ?","DELETE",JOptionPane.YES_NO_OPTION);
+        
+        if(a == 0)
+        {
+           
+            int row = getMyTable().getSelectedRow();
+            
+            String cell = getMyTable().getModel().getValueAt(row,0).toString();
+            
+            String sql = "DELETE FROM users where id = " + cell;
+            
+            try
+            {
+            Statement   pst = conn.prepareStatement(sql); 
+            pst.execute(sql);
+            
+            JOptionPane.showMessageDialog(null,"Row Successfully Deleted");
+            
+            }catch(Exception b)
+            {
+              JOptionPane.showMessageDialog(null,"Could not delete row");
+            }
+        }
     }
 
    //Must be able to click on row and appears in textfields!!!!!!!!!

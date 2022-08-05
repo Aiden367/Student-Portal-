@@ -11,6 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 public class menu extends JFrame implements ActionListener
 {
 //------------------------start of declerations-------------------------------//
@@ -82,7 +85,13 @@ public class menu extends JFrame implements ActionListener
         
         if(e.getSource() == addStudent)
         {
-            new firstDisplay();
+            try
+            {
+                new firstDisplay();
+            } catch (SQLException ex)
+            {
+                Logger.getLogger(menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
             this.setVisible(false);
         }
     }

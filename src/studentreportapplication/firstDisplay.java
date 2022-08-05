@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,7 +28,7 @@ public class firstDisplay extends JFrame implements ActionListener
     private JLabel textStudentFirstName, textStudentLastName, textStudentClass, textStudentGrade,
             textStudentAge, textStudentLocation, textStudentContactInformation;
 
-    private JButton returnToMenu, saveDetails;
+    private JButton returnToMenu, saveDetails,deleteARow;
     private JTable table;
     private DefaultTableModel model;
 //   private Object[][] studentsData;
@@ -45,6 +47,12 @@ public class firstDisplay extends JFrame implements ActionListener
         returnToMenu = new JButton("Return to Menu");
         returnToMenu.addActionListener(this);
         returnToMenu.setBounds(420, 510, 150, 40);
+        
+        deleteARow = new JButton("Delete a row");
+        deleteARow.addActionListener(this);
+        deleteARow.setBounds(590,510,150,40);
+        
+        
 
 //-------------------End of JButtons------------------------------------------//
 
@@ -145,7 +153,7 @@ public class firstDisplay extends JFrame implements ActionListener
         };
 
          table = new JTable();
-
+        
         model = new DefaultTableModel();
         model.setColumnIdentifiers(columnNames);
         
@@ -156,11 +164,13 @@ public class firstDisplay extends JFrame implements ActionListener
         table.setModel(students.popultingGrid());
         table.setBackground(Color.WHITE);
         table.setRowHeight(30);
+        students.setTable(table);
+         
 
         JScrollPane jScrollPane = new JScrollPane(table);
 
         jScrollPane.setBounds(250, 300, 800, 200);
-
+       
 //------------------End of creation of table----------------------------------//
 
 //----------------Start of JFRAME---------------------------------------------//
@@ -185,6 +195,7 @@ public class firstDisplay extends JFrame implements ActionListener
         this.add(textStudentInformation);
         this.add(returnToMenu);
         this.add(saveDetails);
+        this.add(deleteARow);
 //        this.add(table);
         this.add(jScrollPane);
 
@@ -231,20 +242,22 @@ public class firstDisplay extends JFrame implements ActionListener
             row[4] = studentAge.getText();
             row[5] = studentLocation.getText();
             row[6] = studentContactInformation.getText();
-            model.addRow(row);
-//            table.setModel();
-//            students.addingInformationToTable();
             students.addStudent();
-//            Connection con = null;
-//            try{
-//            con = DatabaseConnection.getConnection();
-//            con.close();
-//            }catch(Exception b)
-//            {
-//                JOptionPane.showMessageDialog(null,"Cant Save Data");
-//            }
-////             model.addRow(new Object[] {studentFirstName.getText(),studentFirstName.getText(),studentClass.getText()
-////             ,learnersGrade,learnersAge,studentLocation.getText(),learnersContactInformation});
+            model.addRow(row);
+//           
+
+        }
+        
+        if(e.getSource() == deleteARow)
+        {
+            try
+            {
+                
+                students.removeRowFromDataBase();
+            } catch (SQLException ex)
+            {
+                
+            }
         }
     }
 
