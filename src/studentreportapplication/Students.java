@@ -259,22 +259,26 @@ public TableModel popultingGrid() throws SQLException
         
         if(a == 0)
         {
-           
-            int row = getMyTable().getSelectedRow();
+            int getRows = getMyTable().getModel().getRowCount();
+            System.out.print(getRows);
+            int rows = getMyTable().getSelectedRow();
             
-            String cell = getMyTable().getModel().getValueAt(row,0).toString();
+            String cell = getMyTable().getModel().getValueAt(rows,3).toString();
             
-            String sql = "DELETE FROM users where id = " + cell;
+            String sql = "DELETE FROM StudentInformation where id = " + cell;
             
             try
             {
-            Statement   pst = conn.prepareStatement(sql); 
-            pst.execute(sql);
+                Statement st =  conn.createStatement();
+                ResultSet rs = st.executeQuery(sql);
+//            Statement   pst = conn.prepareStatement(sql); 
+//               rs.execute(sql);
             
             JOptionPane.showMessageDialog(null,"Row Successfully Deleted");
             
             }catch(Exception b)
             {
+              System.err.print(b);
               JOptionPane.showMessageDialog(null,"Could not delete row");
             }
         }
