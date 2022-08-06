@@ -7,9 +7,11 @@ import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.sql.*;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
 public class Students
 {
 
@@ -213,7 +215,7 @@ public void addingInformationToTable()
 
 public TableModel popultingGrid() throws SQLException
 {
-    String populateTable = "select * from StudentInformation";
+    String populateTable = "SELECT * FROM StudentInformation ";
     Connection con = null;
     
         con = DatabaseConnection.getConnection();
@@ -249,9 +251,25 @@ public TableModel popultingGrid() throws SQLException
          return tblModel;
     }
 
-   
+//----------------------------Start of method---------------------------------//
+
     public void removeRowFromDataBase() throws SQLException
     {
+        
+//        String sql = "delete FROM StudentInformation where StudentInformation.Id = ?";
+//        Connection conn =  DatabaseConnection.getConnection();
+//    try {
+//     PreparedStatement pst = conn.prepareStatement(sql);
+//       pst.setString(1,);
+//       ((DefaultTableModel)getMyTable().getModel()).removeRow(getMyTable().getSelectedRow());
+//        pst.execute();
+//    JOptionPane.showMessageDialog(null, "Deleted");
+//
+//
+//   } catch (Exception e) {
+//      e.printStackTrace();
+//      JOptionPane.showMessageDialog(null, e);
+//     }
         Connection conn =  DatabaseConnection.getConnection();
 
         int a = JOptionPane.showConfirmDialog((Component)null,"Do you want to delete the selected "
@@ -259,18 +277,26 @@ public TableModel popultingGrid() throws SQLException
         
         if(a == 0)
         {
+//            DefaultTableModel model = (DefaultTableModel) getMyTable().getModel();
             int getRows = getMyTable().getModel().getRowCount();
-            System.out.print(getRows);
+            
+//            System.out.print(getRows);
+            
             int rows = getMyTable().getSelectedRow();
             
-            String cell = getMyTable().getModel().getValueAt(rows,3).toString();
+            String cell = getMyTable().getModel().getValueAt(rows,2).toString();
+//            System.out.println(cell);
             
-            String sql = "DELETE FROM StudentInformation where id = " + cell;
+            String sql2 = "DELETE  FROM StudentInformation where FirstName = '" + cell + "'";
             
             try
             {
-                Statement st =  conn.createStatement();
-                ResultSet rs = st.executeQuery(sql);
+                PreparedStatement stmt = conn.prepareStatement(sql2);
+                stmt.executeQuery();
+//                stmt.executeQuery();
+
+//                Statement st =  conn.createStatement();
+                
 //            Statement   pst = conn.prepareStatement(sql); 
 //               rs.execute(sql);
             
@@ -278,13 +304,90 @@ public TableModel popultingGrid() throws SQLException
             
             }catch(Exception b)
             {
+              b.printStackTrace();
               System.err.print(b);
               JOptionPane.showMessageDialog(null,"Could not delete row");
             }
         }
     }
+//---------------------------end of method------------------------------------//    
+//    public void displayDataBase()
+//    {
+//        try
+//        {
+//          Class.forName("com.mysql.jdbc.Driver");
+//          Connection conn = DatabaseConnection.getConnection();
+//          String sql = "select * from StudentInformation";
+//          PreparedStatement pstmt = conn.prepareStatement(sql);
+//          ResultSet rs = pstmt.executeQuery();
+//         
+//          
+//          JTable tbl = new JTable();
+//          
+//         
+//          
+//        }catch(Exception E){
+//        JOptionPane.showMessageDialog(null,"Could not load Database");
+//    }
+//        
+//    }
 
    //Must be able to click on row and appears in textfields!!!!!!!!!
    //Hide id
    //Updates based  on student id because it is unique
+    
+    
+//--------------------------Start of method-----------------------------------//
+   public  void showingTextInTextField() throws SQLException
+   {
+       try{
+       Connection conn =  DatabaseConnection.getConnection();
+       
+       int row = getMyTable().getSelectedRow();
+       
+       String tblClick = getMyTable().getModel().getValueAt(row,0).toString();
+       
+       String sql = "select from StudentInformation where"+tblClick+"";
+       
+       PreparedStatement   pst = conn.prepareStatement(sql);
+       
+       ResultSet rs = pst.executeQuery();
+       
+       if(rs.next())
+       {
+           String learnerFirstName = String.valueOf(rs.getString("FirstName"));
+           setFirstName(learnerFirstName);
+           
+           String learnerLastName = String.valueOf(rs.getString("LastName"));
+           setLastName(learnerLastName);
+           
+           String learnersClass = String.valueOf(rs.getString("StudentsClass"));
+           setStudentClass(learnerFirstName);
+           
+           String learnerGrade = String.valueOf(rs.getInt("StudentsGrade"));
+           int grade = Integer.parseInt(learnerGrade);
+           setStudentGrade(grade);
+           
+           String learnersAge = String.valueOf(rs.getInt("StudentsAge"));
+           int age = Integer.parseInt(learnersAge);
+           setStudentAge(age);
+           
+           String learnersLocation = String.valueOf(rs.getString("StudentsLocation"));
+           setFirstName(learnersLocation);
+           
+           String learnerContactInformation = String.valueOf(rs.getInt("ContactInformation"));
+           int contactInfo = Integer.parseInt(learnerContactInformation);
+           setStudentContactInformation(contactInfo);
+           
+       }
+       }catch(Exception f)
+       {
+           System.err.print(f);
+           JOptionPane.showMessageDialog(null,"Error loading data");
+       }
+   }
+    
+    
+    
+//--------------------------End of method-------------------------------------//
 }

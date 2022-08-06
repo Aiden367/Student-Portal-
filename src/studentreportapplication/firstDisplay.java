@@ -5,11 +5,9 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 //Class for if the user wants to add a new student into the system
-public class firstDisplay extends JFrame implements ActionListener
+public class firstDisplay extends JFrame implements ActionListener,MouseListener
 {
    //Try not to make to many global variables NB!!!!!!!!!!!!!!!!!
     private JTextField studentFirstName, studentLastName, studentClass, studentGrade, studentAge,
@@ -259,6 +257,52 @@ public class firstDisplay extends JFrame implements ActionListener
                 
             }
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e)
+    {
+        try
+        {
+            students.showingTextInTextField();
+            studentFirstName.setText(students.getFirstName());
+            studentLastName.setText(students.getLastName());
+            studentClass.setText(students.getStudentClass());
+            String grade = Integer.toString(students.getStudentGrade());
+            studentGrade.setText(grade);
+            studentAge.setText(Integer.toString(students.getStudentAge()));
+            studentLocation.setText(students.getStudentLocation());
+            studentContactInformation.setText(Integer.toString(students.getStudentContactInformation()));
+        
+        } catch (SQLException ex)
+        {
+           System.err.print(ex);
+           JOptionPane.showMessageDialog(null,"Could not load Data");
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e)
+    {
+        
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e)
+    {
+       
     }
 
 }
