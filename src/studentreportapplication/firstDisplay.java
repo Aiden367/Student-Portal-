@@ -163,7 +163,7 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
         table.setBackground(Color.WHITE);
         table.setRowHeight(30);
         students.setTable(table);
-         
+         table.addMouseListener(this);
 
         JScrollPane jScrollPane = new JScrollPane(table);
 
@@ -196,6 +196,8 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
         this.add(deleteARow);
 //        this.add(table);
         this.add(jScrollPane);
+//        this.addMouseListener;
+       
 
 //-----------------End of JFRAME----------------------------------------------//
     }
@@ -260,12 +262,13 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
     }
 
     @Override
-    public void mouseClicked(MouseEvent e)
+    public void mouseClicked(java.awt.event.MouseEvent evt)
     {
         try
         {
             students.showingTextInTextField();
             studentFirstName.setText(students.getFirstName());
+            System.out.println(students.getFirstName());
             studentLastName.setText(students.getLastName());
             studentClass.setText(students.getStudentClass());
             String grade = Integer.toString(students.getStudentGrade());
@@ -273,7 +276,7 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
             studentAge.setText(Integer.toString(students.getStudentAge()));
             studentLocation.setText(students.getStudentLocation());
             studentContactInformation.setText(Integer.toString(students.getStudentContactInformation()));
-        
+          
         } catch (SQLException ex)
         {
            System.err.print(ex);
@@ -284,13 +287,13 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
     @Override
     public void mousePressed(MouseEvent e)
     {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     @Override
     public void mouseReleased(MouseEvent e)
     {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     @Override

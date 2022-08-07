@@ -16,14 +16,12 @@ public class Students
 {
 
     DatabaseConnection dataBaseConnection = new DatabaseConnection();
-    
-    
-    
+
     private String lastName, firstName, studentClass, studentLocation;
     private int studentGrade, studentAge, studentContactInformation;
-    private Object [][] studentData;
-    private JTable myTable,table;
-     DefaultTableModel tblModel;
+    private Object[][] studentData;
+    private JTable myTable, table;
+    DefaultTableModel tblModel;
     JTextField setLastName;
     JTextField setFirstName;
     JTextField setStudentAge;
@@ -31,31 +29,28 @@ public class Students
     JTextField setStudentGrade;
     JTextField setStudentLocation;
     JTextField setStudentContactInformation;
-    
-
 
 //----------------------Start of Getters and Setters--------------------------//
-    
     public void setTable(JTable value)
     {
         this.myTable = value;
     }
-    
+
     public JTable getMyTable()
     {
         return myTable;
     }
-    
-    public void setStudentData(Object [][] learnerData)
+
+    public void setStudentData(Object[][] learnerData)
     {
         this.studentData = learnerData;
     }
-    
+
     public Object[][] getStudentData()
     {
         return studentData;
     }
-    
+
     public String getLastName()
     {
         return lastName;
@@ -127,20 +122,16 @@ public class Students
     }
 
 //-------------------------End of getters and Setters-------------------------// 
-    
-
-    
 //-------------------------Start of method------------------------------------//
-    
     public void addStudent()
     {
 
         //String used to insert the information into the database when the user pressed save details
         String sql = "INSERT INTO StudentInformation (LastName,FirstName,StudentsClass"
                 + ",StudentsGrade,StudentsAge,StudentsLocation,ContactInformation)" + "VALUES (?,?,?,?,?,?,?)";
-        
+
         Connection con = null;
-        
+
         try
         {
 
@@ -163,7 +154,6 @@ public class Students
                 JOptionPane.showMessageDialog(null, "Row has been inserted");
             }
 
-
         } catch (Exception e)
         {
             System.err.print(e);
@@ -172,66 +162,67 @@ public class Students
 
     }
 //---------------------------End of method------------------------------------//
-    
+
 //----------------------------Start of Method---------------------------------//
-public void addingInformationToTable()
-{
-    String populateTable = "select * from StudentInformation";
-    Connection con = null;
-    try
+    public void addingInformationToTable()
     {
-       con = DatabaseConnection.getConnection();
-       
+        String populateTable = "select * from StudentInformation";
+        Connection con = null;
+        try
+        {
+            con = DatabaseConnection.getConnection();
 
-       Statement st =  con.createStatement();
-       ResultSet rs =st.executeQuery(populateTable);
-       
-       while(rs.next())
-       {
-           String userFirstName = rs.getString("LastName");
-           String userLastName = rs.getString("FirstName");
-           String userClass = rs.getString("StudentsClass");
-           String userGrade = rs.getString("StudentsGrade");
-           String userAge = rs.getString("StudentsLocation");
-           String userContactInformation = rs.getString("ContactInformation");
-           
-           String tbData[] = {userFirstName,userLastName,userClass,userGrade,userAge,userContactInformation};
-           
-           table = new JTable();
-           
-           DefaultTableModel  model = new DefaultTableModel();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(populateTable);
 
-          table.setModel(model);
-          
-          model.addRow(tbData);
-          
-       }
-    }catch(Exception e)
-    {
-       JOptionPane.showMessageDialog(null,"Could not populate Table");
+            while (rs.next())
+            {
+                String userFirstName = rs.getString("LastName");
+                String userLastName = rs.getString("FirstName");
+                String userClass = rs.getString("StudentsClass");
+                String userGrade = rs.getString("StudentsGrade");
+                String userAge = rs.getString("StudentsLocation");
+                String userContactInformation = rs.getString("ContactInformation");
+
+                String tbData[] =
+                {
+                    userFirstName, userLastName, userClass, userGrade, userAge, userContactInformation
+                };
+
+                table = new JTable();
+
+                DefaultTableModel model = new DefaultTableModel();
+
+                table.setModel(model);
+
+                model.addRow(tbData);
+
+            }
+        } catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Could not populate Table");
+        }
     }
-}    
 //-----------------------------End of Method----------------------------------//
 
-public TableModel popultingGrid() throws SQLException
-{
-    String populateTable = "SELECT * FROM StudentInformation ";
-    Connection con = null;
-    
+    public TableModel popultingGrid() throws SQLException
+    {
+        String populateTable = "SELECT * FROM StudentInformation ";
+        Connection con = null;
+
         con = DatabaseConnection.getConnection();
-        
-        Statement st =  con.createStatement();
-        
-        ResultSet rs =st.executeQuery(populateTable);
-        
+
+        Statement st = con.createStatement();
+
+        ResultSet rs = st.executeQuery(populateTable);
+
         int numCols = rs.getMetaData().getColumnCount();
-        
-         tblModel = new DefaultTableModel();
-         
+
+        tblModel = new DefaultTableModel();
+
 //         table = new JTable(tblModel);
-         
-        
-        for (int col = 1; col <= numCols; col++){
+        for (int col = 1; col <= numCols; col++)
+        {
             tblModel.addColumn(rs.getMetaData().getColumnLabel(col));
         }
 
@@ -247,15 +238,14 @@ public TableModel popultingGrid() throws SQLException
             tblModel.setValueAt(rs.getString("StudentsAge"), row, 7);
             tblModel.setValueAt(rs.getString("ContactInformation"), row, 8);
             row++;
-        }   
-         return tblModel;
+        }
+        return tblModel;
     }
 
 //----------------------------Start of method---------------------------------//
-
     public void removeRowFromDataBase() throws SQLException
     {
-        
+
 //        String sql = "delete FROM StudentInformation where StudentInformation.Id = ?";
 //        Connection conn =  DatabaseConnection.getConnection();
 //    try {
@@ -270,25 +260,24 @@ public TableModel popultingGrid() throws SQLException
 //      e.printStackTrace();
 //      JOptionPane.showMessageDialog(null, e);
 //     }
-        Connection conn =  DatabaseConnection.getConnection();
+        Connection conn = DatabaseConnection.getConnection();
 
-        int a = JOptionPane.showConfirmDialog((Component)null,"Do you want to delete the selected "
-                + "row ?","DELETE",JOptionPane.YES_NO_OPTION);
-        
-        if(a == 0)
+        int a = JOptionPane.showConfirmDialog((Component) null, "Do you want to delete the selected "
+                + "row ?", "DELETE", JOptionPane.YES_NO_OPTION);
+
+        if (a == 0)
         {
 //            DefaultTableModel model = (DefaultTableModel) getMyTable().getModel();
             int getRows = getMyTable().getModel().getRowCount();
-            
+
 //            System.out.print(getRows);
-            
             int rows = getMyTable().getSelectedRow();
-            
-            String cell = getMyTable().getModel().getValueAt(rows,2).toString();
+
+            String cell = getMyTable().getModel().getValueAt(rows, 2).toString();
 //            System.out.println(cell);
-            
+
             String sql2 = "DELETE  FROM StudentInformation where FirstName = '" + cell + "'";
-            
+
             try
             {
                 PreparedStatement stmt = conn.prepareStatement(sql2);
@@ -296,98 +285,72 @@ public TableModel popultingGrid() throws SQLException
 //                stmt.executeQuery();
 
 //                Statement st =  conn.createStatement();
-                
 //            Statement   pst = conn.prepareStatement(sql); 
 //               rs.execute(sql);
-            
-            JOptionPane.showMessageDialog(null,"Row Successfully Deleted");
-            
-            }catch(Exception b)
+                JOptionPane.showMessageDialog(null, "Row Successfully Deleted");
+
+            } catch (Exception b)
             {
-              b.printStackTrace();
-              System.err.print(b);
-              JOptionPane.showMessageDialog(null,"Could not delete row");
+                b.printStackTrace();
+                System.err.print(b);
+                JOptionPane.showMessageDialog(null, "Could not delete row");
             }
         }
     }
-//---------------------------end of method------------------------------------//    
-//    public void displayDataBase()
-//    {
-//        try
-//        {
-//          Class.forName("com.mysql.jdbc.Driver");
-//          Connection conn = DatabaseConnection.getConnection();
-//          String sql = "select * from StudentInformation";
-//          PreparedStatement pstmt = conn.prepareStatement(sql);
-//          ResultSet rs = pstmt.executeQuery();
-//         
-//          
-//          JTable tbl = new JTable();
-//          
-//         
-//          
-//        }catch(Exception E){
-//        JOptionPane.showMessageDialog(null,"Could not load Database");
-//    }
-//        
-//    }
 
-   //Must be able to click on row and appears in textfields!!!!!!!!!
-   //Hide id
-   //Updates based  on student id because it is unique
-    
-    
-//--------------------------Start of method-----------------------------------//
-   public  void showingTextInTextField() throws SQLException
-   {
-       try{
-       Connection conn =  DatabaseConnection.getConnection();
-       
-       int row = getMyTable().getSelectedRow();
-       
-       String tblClick = getMyTable().getModel().getValueAt(row,0).toString();
-       
-       String sql = "select from StudentInformation where"+tblClick+"";
-       
-       PreparedStatement   pst = conn.prepareStatement(sql);
-       
-       ResultSet rs = pst.executeQuery();
-       
-       if(rs.next())
-       {
-           String learnerFirstName = String.valueOf(rs.getString("FirstName"));
-           setFirstName(learnerFirstName);
-           
-           String learnerLastName = String.valueOf(rs.getString("LastName"));
-           setLastName(learnerLastName);
-           
-           String learnersClass = String.valueOf(rs.getString("StudentsClass"));
-           setStudentClass(learnerFirstName);
-           
-           String learnerGrade = String.valueOf(rs.getInt("StudentsGrade"));
-           int grade = Integer.parseInt(learnerGrade);
-           setStudentGrade(grade);
-           
-           String learnersAge = String.valueOf(rs.getInt("StudentsAge"));
-           int age = Integer.parseInt(learnersAge);
-           setStudentAge(age);
-           
-           String learnersLocation = String.valueOf(rs.getString("StudentsLocation"));
-           setFirstName(learnersLocation);
-           
-           String learnerContactInformation = String.valueOf(rs.getInt("ContactInformation"));
-           int contactInfo = Integer.parseInt(learnerContactInformation);
-           setStudentContactInformation(contactInfo);
-           
-       }
-       }catch(Exception f)
-       {
-           System.err.print(f);
-           JOptionPane.showMessageDialog(null,"Error loading data");
-       }
-   }
-    
-    
-    
+    // TO DO Must be able to click on row and appears in textfields!!!!!!!!!
+    //Hide id
+    //Updates based  on student id because it is unique
+
+    public void showingTextInTextField() throws SQLException
+    {
+        int row = getMyTable().getSelectedRow();
+
+        String tblClick = getMyTable().getModel().getValueAt(row, 4).toString();
+        try
+        {
+            Connection conn = DatabaseConnection.getConnection();
+
+            String sql = "select * from StudentInformation where FirstName = '" + tblClick + "'";
+
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next())
+            {
+                String learnerFirstName = String.valueOf(rs.getString("FirstName"));
+                setFirstName(learnerFirstName);
+                System.out.println(learnerFirstName);
+
+                String learnerLastName = String.valueOf(rs.getString("LastName"));
+                setLastName(learnerLastName);
+
+                String learnersClass = String.valueOf(rs.getString("StudentsClass"));
+                setStudentClass(learnerFirstName);
+
+                String learnerGrade = String.valueOf(rs.getInt("StudentsGrade"));
+                int grade = Integer.parseInt(learnerGrade);
+                setStudentGrade(grade);
+
+                String learnersAge = String.valueOf(rs.getInt("StudentsAge"));
+                int age = Integer.parseInt(learnersAge);
+                setStudentAge(age);
+
+                String learnersLocation = String.valueOf(rs.getString("StudentsLocation"));
+                setFirstName(learnersLocation);
+
+                String learnerContactInformation = String.valueOf(rs.getInt("ContactInformation"));
+                int contactInfo = Integer.parseInt(learnerContactInformation);
+                setStudentContactInformation(contactInfo);
+
+            }
+        } catch (Exception f)
+        {
+            System.err.print(f);
+            JOptionPane.showMessageDialog(null, "Error loading data");
+        }
+    }
+
 //--------------------------End of method-------------------------------------//
 }
