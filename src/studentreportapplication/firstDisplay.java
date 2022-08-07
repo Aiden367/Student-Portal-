@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,15 +20,16 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 //Class for if the user wants to add a new student into the system
-public class firstDisplay extends JFrame implements ActionListener,MouseListener
+public class firstDisplay extends JFrame implements ActionListener, MouseListener
 {
-   //Try not to make to many global variables NB!!!!!!!!!!!!!!!!!
+    //Try not to make to many global variables NB!!!!!!!!!!!!!!!!!
+
     private JTextField studentFirstName, studentLastName, studentClass, studentGrade, studentAge,
             studentLocation, studentContactInformation;
     private JLabel textStudentFirstName, textStudentLastName, textStudentClass, textStudentGrade,
             textStudentAge, textStudentLocation, textStudentContactInformation;
 
-    private JButton returnToMenu, saveDetails,deleteARow;
+    private JButton returnToMenu, saveDetails, deleteARow, updateRow;
     private JTable table;
     private DefaultTableModel model;
 //   private Object[][] studentsData;
@@ -44,16 +47,17 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
         //Creation of a menu that returns you back to the starting menu     
         returnToMenu = new JButton("Return to Menu");
         returnToMenu.addActionListener(this);
-        returnToMenu.setBounds(420, 510, 150, 40);
-        
+        returnToMenu.setBounds(758, 510, 150, 40);
+
         deleteARow = new JButton("Delete a row");
         deleteARow.addActionListener(this);
-        deleteARow.setBounds(590,510,150,40);
-        
-        
+        deleteARow.setBounds(420, 510, 150, 40);
+
+        updateRow = new JButton("Update Row");
+        updateRow.addActionListener(this);
+        updateRow.setBounds(590, 510, 150, 40);
 
 //-------------------End of JButtons------------------------------------------//
-
 //-------------------Start of TextFields--------------------------------------//
         //Creation of textfield for entering students first name
         studentFirstName = new JTextField();
@@ -84,9 +88,7 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
         studentContactInformation.setBounds(970, 196, 200, 25);
 
 //-----------------End of TextFields------------------------------------------//
-
 //-----------------start of Labels--------------------------------------------//
-
         //Creation of a label to act as a Title that is "Detailed Time Report"
         JLabel textStudentInformation = new JLabel();
         textStudentInformation.setFont(new Font("gotham", Font.PLAIN, 20));
@@ -142,7 +144,6 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
         textStudentContactInformation.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
 //-------------------End of labels--------------------------------------------//
-
 //------------------Start of creation of table--------------------------------//
         String[] columnNames =
         {
@@ -150,27 +151,24 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
             "Students Grade", "Student Age", "Studet Location", "Contact Information"
         };
 
-         table = new JTable();
-        
+        table = new JTable();
+
         model = new DefaultTableModel();
         model.setColumnIdentifiers(columnNames);
-        
 
         table.setBounds(400, 300, 400, 300);
-        
 
         table.setModel(students.popultingGrid());
         table.setBackground(Color.WHITE);
         table.setRowHeight(30);
         students.setTable(table);
-         table.addMouseListener(this);
+        table.addMouseListener(this);
 
         JScrollPane jScrollPane = new JScrollPane(table);
 
         jScrollPane.setBounds(250, 300, 800, 200);
-       
-//------------------End of creation of table----------------------------------//
 
+//------------------End of creation of table----------------------------------//
 //----------------Start of JFRAME---------------------------------------------//
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
@@ -194,10 +192,9 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
         this.add(returnToMenu);
         this.add(saveDetails);
         this.add(deleteARow);
-//        this.add(table);
+        this.add(updateRow);
+
         this.add(jScrollPane);
-//        this.addMouseListener;
-       
 
 //-----------------End of JFRAME----------------------------------------------//
     }
@@ -247,22 +244,51 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
 //           
 
         }
-        
-        if(e.getSource() == deleteARow)
+
+        if (e.getSource() == deleteARow)
         {
             try
             {
-                
+
                 students.removeRowFromDataBase();
             } catch (SQLException ex)
             {
-                
+
+            }
+        }
+
+        if (e.getSource() == updateRow)
+        {
+            int learnersAge = Integer.parseInt(studentAge.getText());
+
+            int learnersGrade = Integer.parseInt(studentGrade.getText());
+
+            int learnersContactInformation = Integer.parseInt(studentContactInformation.getText());
+            try
+            {
+                students.setLastName(studentLastName.getText());
+
+                students.setFirstName(studentFirstName.getText());
+
+                students.setStudentAge(learnersAge);
+
+                students.setStudentClass(studentClass.getText());
+
+                students.setStudentLocation(studentLocation.getText());
+
+                students.setStudentContactInformation(learnersContactInformation);
+
+                students.setStudentGrade(learnersGrade);
+                students.updateStudentInfo();
+            } catch (SQLException ex)
+            {
+                Logger.getLogger(firstDisplay.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     @Override
-    public void mouseClicked(java.awt.event.MouseEvent evt)
+    public void mouseClicked(MouseEvent e)
     {
         try
         {
@@ -276,36 +302,36 @@ public class firstDisplay extends JFrame implements ActionListener,MouseListener
             studentAge.setText(Integer.toString(students.getStudentAge()));
             studentLocation.setText(students.getStudentLocation());
             studentContactInformation.setText(Integer.toString(students.getStudentContactInformation()));
-          
+
         } catch (SQLException ex)
         {
-           System.err.print(ex);
-           JOptionPane.showMessageDialog(null,"Could not load Data");
+            System.err.print(ex);
+            JOptionPane.showMessageDialog(null, "Could not load Data");
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e)
     {
-        
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e)
     {
-        
+
     }
 
     @Override
     public void mouseEntered(MouseEvent e)
     {
-        
+
     }
 
     @Override
     public void mouseExited(MouseEvent e)
     {
-       
+
     }
 
 }

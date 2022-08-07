@@ -220,7 +220,7 @@ public class Students
 
         tblModel = new DefaultTableModel();
 
-//         table = new JTable(tblModel);
+
         for (int col = 1; col <= numCols; col++)
         {
             tblModel.addColumn(rs.getMetaData().getColumnLabel(col));
@@ -230,36 +230,24 @@ public class Students
         while (rs != null && rs.next())
         {
             tblModel.addRow(new Object[0]);
+            tblModel.setValueAt(rs.getString("Id"), row, 0);
+            tblModel.setValueAt(rs.getString("StudentID"), row, 1);
             tblModel.setValueAt(rs.getString("LastName"), row, 2);
             tblModel.setValueAt(rs.getString("FirstName"), row, 3);
             tblModel.setValueAt(rs.getString("StudentsClass"), row, 4);
             tblModel.setValueAt(rs.getString("StudentsGrade"), row, 5);
-            tblModel.setValueAt(rs.getString("StudentsLocation"), row, 6);
-            tblModel.setValueAt(rs.getString("StudentsAge"), row, 7);
+            tblModel.setValueAt(rs.getString("StudentsAge"), row, 6);
+            tblModel.setValueAt(rs.getString("StudentsLocation"), row, 7);
             tblModel.setValueAt(rs.getString("ContactInformation"), row, 8);
             row++;
         }
         return tblModel;
     }
 
-//----------------------------Start of method---------------------------------//
+
     public void removeRowFromDataBase() throws SQLException
     {
 
-//        String sql = "delete FROM StudentInformation where StudentInformation.Id = ?";
-//        Connection conn =  DatabaseConnection.getConnection();
-//    try {
-//     PreparedStatement pst = conn.prepareStatement(sql);
-//       pst.setString(1,);
-//       ((DefaultTableModel)getMyTable().getModel()).removeRow(getMyTable().getSelectedRow());
-//        pst.execute();
-//    JOptionPane.showMessageDialog(null, "Deleted");
-//
-//
-//   } catch (Exception e) {
-//      e.printStackTrace();
-//      JOptionPane.showMessageDialog(null, e);
-//     }
         Connection conn = DatabaseConnection.getConnection();
 
         int a = JOptionPane.showConfirmDialog((Component) null, "Do you want to delete the selected "
@@ -267,26 +255,22 @@ public class Students
 
         if (a == 0)
         {
-//            DefaultTableModel model = (DefaultTableModel) getMyTable().getModel();
+
             int getRows = getMyTable().getModel().getRowCount();
 
-//            System.out.print(getRows);
             int rows = getMyTable().getSelectedRow();
 
-            String cell = getMyTable().getModel().getValueAt(rows, 2).toString();
-//            System.out.println(cell);
+            String cell = getMyTable().getModel().getValueAt(rows, 0).toString();
 
-            String sql2 = "DELETE  FROM StudentInformation where FirstName = '" + cell + "'";
+            String sql2 = "DELETE  FROM StudentInformation where Id = '" + cell + "'";
 
             try
             {
-                PreparedStatement stmt = conn.prepareStatement(sql2);
-                stmt.executeQuery();
-//                stmt.executeQuery();
 
-//                Statement st =  conn.createStatement();
-//            Statement   pst = conn.prepareStatement(sql); 
-//               rs.execute(sql);
+                PreparedStatement stmt = conn.prepareStatement(sql2);
+                
+                stmt.execute();
+
                 JOptionPane.showMessageDialog(null, "Row Successfully Deleted");
 
             } catch (Exception b)
@@ -301,17 +285,16 @@ public class Students
     // TO DO Must be able to click on row and appears in textfields!!!!!!!!!
     //Hide id
     //Updates based  on student id because it is unique
-
     public void showingTextInTextField() throws SQLException
     {
         int row = getMyTable().getSelectedRow();
-
-        String tblClick = getMyTable().getModel().getValueAt(row, 4).toString();
+        String tblClick = getMyTable().getModel().getValueAt(row, 0).toString();
+       
         try
         {
             Connection conn = DatabaseConnection.getConnection();
 
-            String sql = "select * from StudentInformation where FirstName = '" + tblClick + "'";
+            String sql = "select * from StudentInformation where Id = '" + tblClick + "'";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -321,13 +304,13 @@ public class Students
             {
                 String learnerFirstName = String.valueOf(rs.getString("FirstName"));
                 setFirstName(learnerFirstName);
-                System.out.println(learnerFirstName);
+//                System.out.println(learnerFirstName);
 
                 String learnerLastName = String.valueOf(rs.getString("LastName"));
                 setLastName(learnerLastName);
 
                 String learnersClass = String.valueOf(rs.getString("StudentsClass"));
-                setStudentClass(learnerFirstName);
+                setStudentClass(learnersClass);
 
                 String learnerGrade = String.valueOf(rs.getInt("StudentsGrade"));
                 int grade = Integer.parseInt(learnerGrade);
@@ -338,7 +321,7 @@ public class Students
                 setStudentAge(age);
 
                 String learnersLocation = String.valueOf(rs.getString("StudentsLocation"));
-                setFirstName(learnersLocation);
+                setStudentLocation(learnersLocation);
 
                 String learnerContactInformation = String.valueOf(rs.getInt("ContactInformation"));
                 int contactInfo = Integer.parseInt(learnerContactInformation);
@@ -351,6 +334,26 @@ public class Students
             JOptionPane.showMessageDialog(null, "Error loading data");
         }
     }
+    
+    public void updateStudentInfo() throws SQLException
+    {
+        Connection conn = DatabaseConnection.getConnection();
+        int row = getMyTable().getSelectedRow();
+         String tblClick = getMyTable().getModel().getValueAt(row, 0).toString();
+        String sql = "Update StudentInformation set FirstName = '"+getFirstName()+"',LastName = '"+getLastName()+"', StudentsClass = '"+getStudentClass()+"',StudentsAge ='" + getStudentAge()+"',StudentsLocation ='" + getStudentLocation()+"',ContactInformation ='" + getStudentContactInformation() +"'where Id = '" + tblClick + "'";
+       try
+       { 
+        PreparedStatement st = conn.prepareStatement(sql);
+        
+        st.execute();
+        System.out.println(getFirstName());
+        JOptionPane.showMessageDialog(null,"Row Updated");
+       }catch(Exception e)
+       {
+           System.err.print(e);
+           JOptionPane.showMessageDialog(null,"Could not update row");
+       }
+        
+    }
 
-//--------------------------End of method-------------------------------------//
 }
