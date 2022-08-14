@@ -1,6 +1,6 @@
-#Student Portal Programme
+# Student Portal Programme
 
-![Project Image](project-image-url)
+
 
 > I created this project to make it easier for staff at a educational institute to store students personal information into the schools system to allow for tracking of students in the school.
 
