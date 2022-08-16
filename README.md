@@ -20,7 +20,7 @@
 ## Description
 
 The Student-Portal programme is a programme that was created to allow for staff at an educational institute to store their students personal information on
-the schools system thus allowing for a more effecient way of tracking the amount of students at the school
+the schools system thus allowing for a more effecient way of tracking the amount of students at the school.
 
 #### Technologies
 
